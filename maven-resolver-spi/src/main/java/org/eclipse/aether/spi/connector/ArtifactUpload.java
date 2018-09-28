@@ -57,7 +57,11 @@ public final class ArtifactUpload
     }
 
     /**
-     * Creates a new upload with the specified properties.
+     * <p>Creates a new upload with the specified properties.</p> 
+     * 
+     * <p><strong>IMPORTANT</strong> When using a fileTransformer, the
+     * content of the file is stored in memory to ensure that file content and checksums stay in sync!
+     * </p>
      * 
      * @param artifact The artifact to upload, may be {@code null}.
      * @param file The local file to upload the artifact from, may be {@code null}.

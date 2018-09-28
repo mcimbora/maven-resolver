@@ -289,9 +289,11 @@ public class DefaultInstaller
             }
             else if ( fileTransformer != null ) 
             {
-                InputStream is = fileTransformer.transformData( srcFile );
-                fileProcessor.write( dstFile, is );
-                dstFile.setLastModified( srcFile.lastModified() );
+                try ( InputStream is = fileTransformer.transformData( srcFile ) )
+                {
+                    fileProcessor.write( dstFile, is );
+                    dstFile.setLastModified( srcFile.lastModified() );
+                }
             }
             else
             {

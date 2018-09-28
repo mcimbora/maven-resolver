@@ -32,11 +32,18 @@ import org.eclipse.aether.artifact.Artifact;
 public interface FileTransformerManager
 {
     /**
-     * All transformers for this specific artifact. Be aware that if you want to create additional files, but also want to the original
-     * to be deployed, you must add an explicit transformer for that file too (one that doesn't transform the artifact and data).
-     *  
-     * @param artifact
-     * @return
+     * <p>
+     * All transformers for this specific artifact. Be aware that if you want to create additional files, but also want
+     * to the original to be deployed, you must add an explicit transformer for that file too (one that doesn't
+     * transform the artifact and data).
+     * </p>
+     * 
+     * <p><strong>IMPORTANT</strong> When using a fileTransformer, the content of the file is stored in memory to ensure
+     * that file content and checksums stay in sync!
+     * </p>
+     * 
+     * @param artifact the artifact
+     * @return a collection of FileTransformers to apply on the artifact, never {@code null}
      */
     Collection<FileTransformer> getTransformersForArtifact( Artifact artifact );
 }

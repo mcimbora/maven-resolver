@@ -19,13 +19,16 @@ package org.eclipse.aether.internal.impl;
  * under the License.
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +43,6 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
-import org.eclipse.aether.internal.impl.DefaultDeployer;
 import org.eclipse.aether.internal.test.util.TestFileProcessor;
 import org.eclipse.aether.internal.test.util.TestFileUtils;
 import org.eclipse.aether.internal.test.util.TestUtils;
@@ -395,9 +397,8 @@ public class DefaultDeployerTest
         {
             @Override
             public InputStream transformData( File file )
-                throws IOException
             {
-                return new ByteArrayInputStream( "transformed data".getBytes( Charset.forName( "UTF-8" ) ) );
+                return new ByteArrayInputStream( "transformed data".getBytes( StandardCharsets.UTF_8 ) );
             }
             
             @Override
@@ -408,7 +409,7 @@ public class DefaultDeployerTest
         };
         
         StubFileTransformerManager fileTransformerManager = new StubFileTransformerManager();
-        fileTransformerManager.addFileTransformer( transformer, "jar" );
+        fileTransformerManager.addFileTransformer( "jar", transformer );
         session.setFileTransformerManager( fileTransformerManager );
         
         request = new DeployRequest();

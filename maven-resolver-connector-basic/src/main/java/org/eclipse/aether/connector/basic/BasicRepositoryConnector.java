@@ -24,6 +24,7 @@ import static java.util.Objects.requireNonNull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -508,6 +509,16 @@ final class BasicRepositoryConnector
             this( path, file, null, checksums, listener );
         }
 
+        /**
+         * <strong>IMPORTANT</strong> When using a fileTransformer, the content of the file is stored in memory to 
+         * ensure that file content and checksums stay in sync!
+         * 
+         * @param path
+         * @param file
+         * @param fileTransformer
+         * @param checksums
+         * @param listener
+         */
         PutTaskRunner( URI path, File file, FileTransformer fileTransformer, List<RepositoryLayout.Checksum> checksums,
                               TransferTransportListener<?> listener )
         {
@@ -525,10 +536,13 @@ final class BasicRepositoryConnector
                 // transform data once to byte array, ensure constant data for checksum
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
-                for ( int read; ( read =
-                    fileTransformer.transformData( file ).read( buffer, 0, buffer.length ) ) != -1; )
+                
+                try ( InputStream transformData = fileTransformer.transformData( file ) )
                 {
-                    baos.write( buffer, 0, read );
+                    for ( int read; ( read = transformData.read( buffer, 0, buffer.length ) ) != -1; )
+                    {
+                        baos.write( buffer, 0, read );
+                    }
                 }
 
                 byte[] bytes = baos.toByteArray();

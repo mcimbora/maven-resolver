@@ -38,7 +38,7 @@ public class StubFileTransformerManager implements FileTransformerManager
         return fileTransformers.get( artifact.getExtension() );
     }
     
-    public void addFileTransformer( FileTransformer fileTransformer, String extension )
+    public void addFileTransformer( String extension, FileTransformer fileTransformer )
     {
         if ( !fileTransformers.containsKey( extension ) )
         {
